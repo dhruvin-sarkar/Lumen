@@ -62,3 +62,8 @@ option.DAYNIGHT_GRADE.comment=Subtle time-of-day colour finish: warm at sunrise/
 
 option.VOL_STRENGTH=Volumetric Light Shafts
 option.VOL_STRENGTH.comment=God rays: visible sunbeams/moonbeams scattering through the air, strongest through canopy and cave openings. 0 = off. Disabled at Low tier.
+
+option.SKY_LUT=Sky LUT (performance)
+option.SKY_LUT.comment=Precompute the sky once per frame instead of per pixel (faster). Turn Off only if you see a seam or artifact in the sky.
+value.SKY_LUT.0=Off (analytic)
+value.SKY_LUT.1=On

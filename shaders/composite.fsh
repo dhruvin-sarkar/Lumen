@@ -26,7 +26,7 @@ vec3 waterReflection(vec3 viewPos, vec3 worldNormal, vec3 wSun, vec3 wMoon) {
     vec3 wDir = viewToWorldDir(normalize(viewPos));
     vec3 wR   = reflect(wDir, worldNormal);
     wR.y = max(wR.y, 0.02);
-    vec3 skyRefl = skyRadiance(wR, wSun, wMoon, wetness)
+    vec3 skyRefl = sampleSky(wR, wSun, wMoon, wetness)
                  + sunlightColor(wSun.y) * pow(max(dot(wR, wSun), 0.0), 220.0) * 3.0;
 
 #if LUMEN_TIER == TIER_LOW

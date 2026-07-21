@@ -62,6 +62,7 @@ const float HALF_PI = 1.57079632679489661923;
 #define AO_STRENGTH    100 //[0 25 50 75 100 150 200]
 #define DAYNIGHT_GRADE 100 //[0 25 50 75 100 150 200]
 #define VOL_STRENGTH   100 //[0 25 50 75 100 150 200]
+#define SKY_LUT        1   //[0 1]
 
 // ================================================================
 // colortex buffer FORMATS (docs/01 section 3 buffer table).

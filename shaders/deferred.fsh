@@ -50,7 +50,7 @@ void main() {
     vec3 color;
 
     if (depth >= 1.0) {
-        color = skyRadiance(wDir, wSun, wMoon, wetness);
+        color = sampleSky(wDir, wSun, wMoon, wetness);
     } else {
         vec3  albedo   = pow(texture(colortex0, texcoord).rgb, vec3(2.2));
         vec4  c1       = texture(colortex1, texcoord);
