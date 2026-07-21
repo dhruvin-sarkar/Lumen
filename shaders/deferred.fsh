@@ -39,7 +39,7 @@ void main() {
         vec4  c2       = texture(colortex2, texcoord);
         float skyLM    = c2.r;
         float blockLM  = c2.g;
-        float emission = texture(colortex3, texcoord).r;
+        vec4  c3 = texture(colortex3, texcoord); // rgb = emission colour, a = strength
 
         vec3  lightDir = normalize(shadowLightPosition);
         float NdotL    = max(dot(n, lightDir), 0.0);
@@ -54,7 +54,7 @@ void main() {
         vec3  block = blockLightColor() * blockLightFalloff(blockLM) * 2.6 * (TORCH_INTENSITY / 100.0);
 
         color  = albedo * ((ambient + bounceFloor) * matAO + direct + block);
-        color += albedo * emission * 4.0;
+        color += c3.rgb * c3.a * 8.0; // coloured self-illumination (HDR, feeds bloom)
     }
 
     vec4 lit = vec4(max(color, 0.0), 1.0);
