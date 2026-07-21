@@ -58,6 +58,10 @@ const float HALF_PI = 1.57079632679489661923;
 #define CAUSTICS       1   //[0 1]
 #define UW_FOG_DENSITY 100 //[25 50 75 100 150 200]
 
+// ---- Ambient occlusion + grading options. ----
+#define AO_STRENGTH    100 //[0 25 50 75 100 150 200]
+#define DAYNIGHT_GRADE 100 //[0 25 50 75 100 150 200]
+
 // ================================================================
 // colortex buffer FORMATS (docs/01 section 3 buffer table).
 // These are Iris buffer-format directives, NOT compiled GLSL: the format

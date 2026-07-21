@@ -1,19 +1,17 @@
 #version 330 compatibility
 /*
- * final.fsh — present to screen (docs/04).
- * Normal path: metered auto-exposure (colortex9) + manual EV, additive
- * mip-blurred bloom (colortex7), filmic tonemap, sRGB encode.
- * Debug path raw-views any buffer.
+ * final.fsh — present to screen (docs/04). Normal path: bloom + exposure,
+ * day/night grade, filmic tonemap, sRGB encode, dither. Debug path
+ * raw-views a buffer.
  */
 #include "/lib/lumen_common.glsl"
 #include "/lib/lumen_uniforms.glsl"
 #include "/lib/lumen_color.glsl"
 
-layout(location = 0) out vec4 fragColor; // -> screen
+layout(location = 0) out vec4 fragColor;
 in vec2 texcoord;
 
-// Iris builds colortex7 mipmaps before this pass so we can mip-blur bloom.
-const bool colortex7MipmapEnabled = true;
+const bool colortex7MipmapEnabled = true; // for mip-blurred bloom
 
 float linearizeDepth01(float d) {
     float z = d * 2.0 - 1.0;
@@ -39,7 +37,13 @@ void main() {
     float exposure = texture(colortex9, vec2(0.5)).r;
     if (!(exposure > 0.0)) exposure = 1.0;
     exposure *= exp2(EXPOSURE_COMP / 100.0);
-    color = linearToSRGB(tonemapACES(hdr * exposure));
+    hdr *= exposure;
+
+    float sunY = normalize(mat3(gbufferModelViewInverse) * sunPosition).y;
+    hdr = dayNightGrade(hdr, sunY, DAYNIGHT_GRADE / 100.0);
+
+    color  = linearToSRGB(tonemapACES(hdr));
+    color += ditherLSB(gl_FragCoord.xy) / 255.0; // break 8-bit banding
 #elif DEBUG_BUFFER == 1
     color = octDecode(texture(colortex1, texcoord).xy) * 0.5 + 0.5;
 #elif DEBUG_BUFFER == 2

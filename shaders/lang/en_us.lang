@@ -53,3 +53,9 @@ value.CAUSTICS.1=On
 
 option.UW_FOG_DENSITY=Underwater Fog Density
 option.UW_FOG_DENSITY.comment=How quickly the water absorbs the view when submerged. Higher = murkier, shorter visibility.
+
+option.AO_STRENGTH=Ambient Occlusion
+option.AO_STRENGTH.comment=Darkening of crevices and block-contact points. Subtle by default; 0 = off. Disabled automatically at Low tier.
+
+option.DAYNIGHT_GRADE=Day/Night Grading
+option.DAYNIGHT_GRADE.comment=Subtle time-of-day colour finish: warm at sunrise/sunset, cool at night. 0 = neutral (rely on the lighting alone).
