@@ -42,3 +42,6 @@ option.WAVE_HEIGHT.comment=Amplitude of water surface waves, as a percentage of 
 
 option.REFRACT_STRENGTH=Refraction Strength
 option.REFRACT_STRENGTH.comment=How strongly the wave surface bends the view of the world underneath the water. 0 = no refraction.
+
+option.BLOOM_INTENSITY=Bloom Intensity
+option.BLOOM_INTENSITY.comment=Strength of the glow around bright light sources (sun, water glint, lava, torches). Conservative by default so lights look luminous without washing out the scene.

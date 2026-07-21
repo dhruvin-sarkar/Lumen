@@ -51,6 +51,9 @@ const float HALF_PI = 1.57079632679489661923;
 #define WAVE_HEIGHT      100 //[0 25 50 75 100 150 200]
 #define REFRACT_STRENGTH 100 //[0 25 50 75 100 150 200]
 
+// ---- Color / post user options (docs/04 section 7). ----
+#define BLOOM_INTENSITY 100 //[0 25 50 75 100 150 200]
+
 // ================================================================
 // colortex buffer FORMATS (docs/01 section 3 buffer table).
 // These are Iris buffer-format directives, NOT compiled GLSL: the format
