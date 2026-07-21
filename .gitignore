@@ -1,0 +1,24 @@
+# Build / packaging artifacts
+*.zip
+/dist/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
+
+# Local agent history
+.remember/
+
+# Vibe-coding spec/brief docs (kept local, never committed)
+00_VISION_AND_SCOPE.md
+01_TECHNICAL_ARCHITECTURE.md
+02_LIGHTING_SYSTEM_SPEC.md
+03_WATER_SYSTEM_SPEC.md
+04_COLOR_AND_POST_SPEC.md
+05_PERFORMANCE_AND_QUALITY_TIERS.md
+06_CODING_STANDARDS_AND_ROADMAP.md
+07_VISUAL_AMBITION_DIRECTIVE.md
+SPEC_README.md
