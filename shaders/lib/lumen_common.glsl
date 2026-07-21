@@ -44,6 +44,11 @@ const float HALF_PI = 1.57079632679489661923;
  * ================================================================ */
 #define DEBUG_BUFFER 0 //[0 1 2 3 4 5 6 7 8 9 10]
 
+// ---- Lighting / exposure user options (docs/02 section 7). Ints: percent / EV*100. ----
+#define SUN_INTENSITY   100 //[25 50 75 100 125 150 200]
+#define TORCH_INTENSITY 100 //[25 50 75 100 125 150 200]
+#define EXPOSURE_COMP   0   //[-200 -150 -100 -50 0 50 100 150 200]
+
 /* ================================================================
  * colortex buffer formats (docs/01 section 3 buffer table).
  * Iris reads these `const int <name>Format` declarations to allocate

@@ -49,7 +49,7 @@ void main() {
         float vis      = sampleShadowPCF(viewPos, NdotL);
         bool  isDay    = wSun.y > 0.0;
         vec3  directCol = isDay ? sunlightColor(wSun.y) : moonlightColor(wMoon.y);
-        vec3  direct    = directCol * NdotL * vis;
+        vec3  direct    = directCol * NdotL * vis * (SUN_INTENSITY / 100.0);
 
         // Sky ambient re-tinted by the current sky colour (docs/02 section 4).
         vec3  skyAmb   = skyAmbientColor(wSun, wMoon, wetness);
@@ -59,7 +59,7 @@ void main() {
         vec3  bounceFloor = vec3(0.055, 0.052, 0.050);
 
         // Block light: warm, smooth falloff (colour table is a follow-up).
-        vec3  block = blockLightColor() * blockLightFalloff(blockLM) * 2.6;
+        vec3  block = blockLightColor() * blockLightFalloff(blockLM) * 2.6 * (TORCH_INTENSITY / 100.0);
 
         color  = albedo * ((ambient + bounceFloor) * matAO + direct + block);
         color += albedo * emission * 4.0; // labPBR emission (0 until decoded)

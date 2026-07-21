@@ -1,9 +1,8 @@
 #version 330 compatibility
 /*
  * final.fsh — present to screen.
- * Normal path: apply exposure, filmic tonemap, sRGB encode (docs/04).
- * Debug path (DEBUG_BUFFER): raw-view any pipeline buffer (docs/06
- * Phase 0). Auto-exposure (colortex9) replaces the constant in Phase 1c.
+ * Normal path: metered auto-exposure (colortex9) + manual EV comp, filmic
+ * tonemap, sRGB encode (docs/04). Debug path raw-views any buffer.
  */
 #include "/lib/lumen_common.glsl"
 #include "/lib/lumen_uniforms.glsl"
@@ -22,8 +21,10 @@ void main() {
     vec3 color;
 
 #if DEBUG_BUFFER == 0
-    vec3 hdr = texture(colortex0, texcoord).rgb;
-    const float exposure = 1.1; // constant until Phase 1c auto-exposure
+    vec3  hdr = texture(colortex0, texcoord).rgb;
+    float exposure = texture(colortex9, vec2(0.5)).r;
+    if (!(exposure > 0.0)) exposure = 1.0;
+    exposure *= exp2(EXPOSURE_COMP / 100.0); // manual EV compensation
     color = linearToSRGB(tonemapACES(hdr * exposure));
 #elif DEBUG_BUFFER == 1
     color = octDecode(texture(colortex1, texcoord).xy) * 0.5 + 0.5;
