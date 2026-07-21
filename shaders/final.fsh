@@ -32,8 +32,10 @@ void main() {
     vec3 color;
 
 #if DEBUG_BUFFER == 0
-    vec3  hdr = texture(colortex0, texcoord).rgb;
-    hdr += sampleBloom(texcoord) * (BLOOM_INTENSITY / 100.0);
+    vec2 uv = texcoord;
+    if (isEyeInWater == 1) uv += vec2(sin(uv.y * 22.0 + frameTimeCounter * 2.3), cos(uv.x * 19.0 + frameTimeCounter * 1.9)) * 0.0022; // underwater warp / meniscus (docs/03 sec 5)
+    vec3  hdr = texture(colortex0, uv).rgb;
+    hdr += sampleBloom(uv) * (BLOOM_INTENSITY / 100.0);
     float exposure = texture(colortex9, vec2(0.5)).r;
     if (!(exposure > 0.0)) exposure = 1.0;
     exposure *= exp2(EXPOSURE_COMP / 100.0);
