@@ -59,6 +59,7 @@ void main() {
         vec4  c2       = texture(colortex2, texcoord);
         float skyLM    = c2.r;
         float blockLM  = c2.g;
+        albedo *= mix(1.0, 0.72, wetness * skyLM * skyLM); // wet surfaces darken (docs/07)
         vec4  c3       = texture(colortex3, texcoord); // rgb = emission colour, a = strength
 
         vec3  lightDir = normalize(shadowLightPosition);

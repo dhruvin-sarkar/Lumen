@@ -116,5 +116,10 @@ void main() {
         col = mix(col, underwaterFogColor(amb), fog);
     }
 
-    outColor = vec4(max(col, 0.0), 1.0);
+    if (isEyeInWater == 2) { // submerged in lava
+        float lavaFog = 1.0 - exp(-length(viewPos) * 2.5);
+        col = mix(col, vec3(0.90, 0.25, 0.05), lavaFog);
+    }
+
+&
 }
