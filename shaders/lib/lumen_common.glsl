@@ -6,8 +6,7 @@
  * every Lumen program.
  *
  * This file is the single source of truth for the buffer layout in
- * docs/01_TECHNICAL_ARCHITECTURE.md section 3. Any change to a buffer
- * format is a docs-first change (update the doc table, then this file).
+ * docs/01_TECHNICAL_ARCHITECTURE.md section 3.
  *
  * Contains NO stage-specific declarations (no attributes / varyings /
  * `in` / `out`) so it is safe to include from both .vsh and .fsh.
@@ -39,8 +38,7 @@ const float HALF_PI = 1.57079632679489661923;
 /* ================================================================
  * Debug visualization (docs/06 Phase 0 "done" condition).
  * Set DEBUG_BUFFER in the options screen to raw-view a buffer in
- * final.fsh. 0 = off (normal image). See final.fsh for the full
- * mapping (1..9 = colortex1..9, 10 = depthtex0).
+ * final.fsh. 0 = off (normal image). 1..9 = colortex1..9, 10 = depth.
  * ================================================================ */
 #define DEBUG_BUFFER 0 //[0 1 2 3 4 5 6 7 8 9 10]
 
@@ -53,34 +51,39 @@ const float HALF_PI = 1.57079632679489661923;
 #define WAVE_HEIGHT      100 //[0 25 50 75 100 150 200]
 #define REFRACT_STRENGTH 100 //[0 25 50 75 100 150 200]
 
-/* ================================================================
- * colortex buffer formats (docs/01 section 3 buffer table).
- * Iris reads these `const int <name>Format` declarations to allocate
- * each attachment. Sizes / clear-behaviour for the non-default
- * buffers are set alongside these (below) and in shaders.properties.
- * ================================================================ */
-const int colortex0Format = RGBA16F;        // Final scene color (HDR)
-const int colortex1Format = RGBA16F;        // Packed view-space normal (octahedral) + material AO
-const int colortex2Format = RGBA8;          // Lightmap (sky,block) + labPBR smoothness/metal
-const int colortex3Format = RGBA8;          // labPBR emission + subsurface/porosity
-const int colortex4Format = RGBA16F;        // Sky-view / aerial-perspective LUT (half-res)
-const int colortex5Format = RGBA16F;        // Water mask + water view depth/normal
-const int colortex6Format = RGBA16F;        // Half-res volumetric accumulation
-const int colortex7Format = R11F_G11F_B10F; // Bloom mip chain
-const int colortex8Format = RGBA16F;        // Temporal history (previous frame)
-const int colortex9Format = R16F;           // Auto-exposure scratch (avg luminance)
+// ================================================================
+// colortex buffer FORMATS (docs/01 section 3 buffer table).
+// These are Iris buffer-format directives, NOT compiled GLSL: the format
+// names (RGBA16F, R11F_G11F_B10F, ...) are not GLSL tokens. Per the Iris
+// buffer-format docs they must live inside a BLOCK COMMENT (Iris parses
+// them here) with one bare directive per line -- no leading '*' and no
+// trailing text on a directive line, or detection fails.
+// ================================================================
+/*
+const int colortex0Format = RGBA16F;
+const int colortex1Format = RGBA16F;
+const int colortex2Format = RGBA8;
+const int colortex3Format = RGBA8;
+const int colortex4Format = RGBA16F;
+const int colortex5Format = RGBA16F;
+const int colortex6Format = RGBA16F;
+const int colortex7Format = R11F_G11F_B10F;
+const int colortex8Format = RGBA16F;
+const int colortex9Format = R16F;
+*/
 
-/* History / accumulation buffers must NOT clear every frame (default
- * is clear). colortex8 carries last frame's color for temporal reuse
- * (SSR / TAA-lite); colortex9 carries the smoothed exposure value. */
+/* History / accumulation buffers must NOT clear every frame (default is
+ * clear). These are valid GLSL consts, so Iris reads them directly.
+ * colortex8 = last-frame color (SSR / TAA-lite); colortex9 = smoothed
+ * exposure value. */
 const bool colortex8Clear = false;
 const bool colortex9Clear = false;
 
 /* ================================================================
  * Octahedral normal encode/decode.
  * Stores a unit vec3 normal in two components (colortex1.xy). Cheaper
- * and more precise than storing raw xyz in 8-bit; we keep it here so
- * gbuffers (encode) and deferred/composite (decode) never drift.
+ * and more precise than storing raw xyz in 8-bit; kept here so gbuffers
+ * (encode) and deferred/composite (decode) never drift.
  * Reference: Cigolle et al., "A Survey of Efficient Representations
  * for Independent Unit Vectors".
  * ================================================================ */
