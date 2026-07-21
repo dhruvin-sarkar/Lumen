@@ -54,6 +54,10 @@ const float HALF_PI = 1.57079632679489661923;
 // ---- Color / post user options (docs/04 section 7). ----
 #define BLOOM_INTENSITY 100 //[0 25 50 75 100 150 200]
 
+// ---- Underwater user options (docs/03 section 5). ----
+#define CAUSTICS       1   //[0 1]
+#define UW_FOG_DENSITY 100 //[25 50 75 100 150 200]
+
 // ================================================================
 // colortex buffer FORMATS (docs/01 section 3 buffer table).
 // These are Iris buffer-format directives, NOT compiled GLSL: the format

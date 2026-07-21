@@ -45,3 +45,11 @@ option.REFRACT_STRENGTH.comment=How strongly the wave surface bends the view of 
 
 option.BLOOM_INTENSITY=Bloom Intensity
 option.BLOOM_INTENSITY.comment=Strength of the glow around bright light sources (sun, water glint, lava, torches). Conservative by default so lights look luminous without washing out the scene.
+
+option.CAUSTICS=Underwater Caustics
+option.CAUSTICS.comment=Animated ripples of focused sunlight on submerged surfaces, synced to the surface waves. Off for a cheaper underwater view.
+value.CAUSTICS.0=Off
+value.CAUSTICS.1=On
+
+option.UW_FOG_DENSITY=Underwater Fog Density
+option.UW_FOG_DENSITY.comment=How quickly the water absorbs the view when submerged. Higher = murkier, shorter visibility.
