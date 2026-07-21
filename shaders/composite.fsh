@@ -91,6 +91,8 @@ void main() {
 #if LUMEN_TIER >= TIER_MEDIUM
         vec3  worldPos = cameraPosition + viewToWorldPos(viewPos);
         float crest = smoothstep(0.10, 0.16, waveHeight(worldPos.xz, frameTimeCounter));
+        float vertical = 1.0 - smoothstep(0.30, 0.75, wnormal.y); // waterfalls (docs/03 sec 6)
+        crest = max(crest, vertical * 0.7);
         foam = max(foam, crest * 0.7);
 #endif
         col = mix(col, col + vec3(0.6), clamp(foam, 0.0, 1.0) * 0.35);
