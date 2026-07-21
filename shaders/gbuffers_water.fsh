@@ -30,6 +30,10 @@ void main() {
 
     // Per-pixel analytic wave normal (world space, up = +Y).
     vec3 n = waveNormal(v_worldPos.xz, frameTimeCounter);
+    if (wetness > 0.01) {
+        float r = sin(v_worldPos.x * 9.0 + frameTimeCounter * 11.0) * cos(v_worldPos.z * 9.0 - frameTimeCounter * 9.0);
+        n = normalize(n + vec3(r, 0.0, r) * 0.05 * wetness);
+    }
 
     outColor = vec4(0.02, 0.05, 0.07, 1.0);            // placeholder; composite replaces
     outWater = vec4(1.0, -v_viewPos.z, octEncode(n));  // mask, view depth, normal

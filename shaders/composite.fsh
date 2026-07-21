@@ -101,7 +101,7 @@ void main() {
     // ---- Underwater (docs/03 section 5) ----
     if (isEyeInWater == 1) {
         vec3 amb = skyAmbientColor(wSun, wMoon, wetness);
-#if CAUSTICS == 1
+#if (CAUSTICS == 1) && (LUMEN_TIER >= TIER_MEDIUM)
         if (depth < 1.0) {
             vec3  worldPos = cameraPosition + viewToWorldPos(viewPos);
             float skyLM    = texture(colortex2, texcoord).r;
