@@ -61,4 +61,12 @@ float sampleShadowPCF(vec3 viewPos, float NdotL) {
     return vis / float(cnt);
 }
 
+// Single-tap shadow test — for volumetrics, where PCF per march step would
+// be far too costly (docs/05, "runs on a potato"). Returns 1 = lit.
+float shadowTestSingle(vec3 viewPos) {
+    vec3 sc = worldToShadowTex(viewToWorldPos(viewPos));
+    if (sc.x < 0.0 || sc.x > 1.0 || sc.y < 0.0 || sc.y > 1.0 || sc.z > 1.0) return 1.0;
+    return step(sc.z - 0.0008, texture(shadowtex0, sc.xy).r);
+}
+
 #endif
