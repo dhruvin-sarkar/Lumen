@@ -98,6 +98,8 @@ void main() {
         col = sceneColor;
     }
 
+    col += texture(colortex6, texcoord).rgb * (VOL_STRENGTH / 100.0); // volumetric light shafts
+
     // ---- Underwater (docs/03 section 5) ----
     if (isEyeInWater == 1) {
         vec3 amb = skyAmbientColor(wSun, wMoon, wetness);

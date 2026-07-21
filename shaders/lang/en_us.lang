@@ -59,3 +59,6 @@ option.AO_STRENGTH.comment=Darkening of crevices and block-contact points. Subtl
 
 option.DAYNIGHT_GRADE=Day/Night Grading
 option.DAYNIGHT_GRADE.comment=Subtle time-of-day colour finish: warm at sunrise/sunset, cool at night. 0 = neutral (rely on the lighting alone).
+
+option.VOL_STRENGTH=Volumetric Light Shafts
+option.VOL_STRENGTH.comment=God rays: visible sunbeams/moonbeams scattering through the air, strongest through canopy and cave openings. 0 = off. Disabled at Low tier.
