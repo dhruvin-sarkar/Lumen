@@ -76,6 +76,7 @@ void main() {
 
         color  = albedo * ((ambient + bounceFloor) * ao + direct + block);
         color += c3.rgb * c3.a * 8.0; // coloured self-illumination (HDR, feeds bloom)
+        color = aerialPerspective(color, length(viewPos), wDir, wSun, wMoon, wetness);
     }
 
     vec4 lit = vec4(max(color, 0.0), 1.0);
