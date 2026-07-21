@@ -121,5 +121,5 @@ void main() {
         col = mix(col, vec3(0.90, 0.25, 0.05), lavaFog);
     }
 
-&
+    outColor = vec4(max(col, 0.0), 1.0);
 }
