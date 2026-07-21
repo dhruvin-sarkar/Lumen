@@ -1,27 +1,38 @@
 #version 330 compatibility
 /*
- * Shared Lumen gbuffer vertex stage.
- * Transforms geometry and forwards the attributes the fragment stage
- * needs to pack the gbuffer (docs/01 section 3). Kept identical across
- * every gbuffers_* program in Phase 0; wave displacement (water) and
- * any per-program specialisation arrive in later phases.
+ * Water gbuffer vertex stage. Displaces water vertices by the shared
+ * wave height (docs/03 section 1) in world space so the swell is
+ * camera-stable; non-water translucents (glass, ice) pass through flat.
  */
 #include "/lib/lumen_common.glsl"
 #include "/lib/lumen_uniforms.glsl"
+#include "/lib/lumen_water_waves.glsl"
 
-out vec2 v_texcoord;   // atlas UV
-out vec2 v_lmcoord;    // vanilla lightmap coord (sky, block), [0,1]
-out vec4 v_tint;       // per-vertex color / biome tint
-out vec3 v_viewNormal; // view-space normal
-out vec3 v_viewPos;    // view-space position (used by water for depth)
+in vec4 mc_Entity; // .x = block id from block.properties (10000 = water)
+
+out vec2  v_texcoord;
+out vec4  v_tint;
+out vec3  v_viewPos;
+out vec3  v_worldPos;
+out float v_isWater;
 
 void main() {
-    vec4 viewPos = gl_ModelViewMatrix * gl_Vertex;
-    v_viewPos    = viewPos.xyz;
-    gl_Position  = gl_ProjectionMatrix * viewPos;
+    vec4 viewPos   = gl_ModelViewMatrix * gl_Vertex;
+    vec3 playerPos = (gbufferModelViewInverse * viewPos).xyz;
+    vec3 worldPos  = playerPos + cameraPosition;
 
-    v_texcoord   = (gl_TextureMatrix[0] * gl_MultiTexCoord0).xy;
-    v_lmcoord    = (gl_TextureMatrix[1] * gl_MultiTexCoord1).xy;
-    v_tint       = gl_Color;
-    v_viewNormal = normalize(gl_NormalMatrix * gl_Normal);
+    v_isWater = (mc_Entity.x == 10000.0) ? 1.0 : 0.0;
+
+    // Displace along world up (docs/03: Low tier is vertex-only, no tess).
+    float h = waveHeight(worldPos.xz, frameTimeCounter) * (WAVE_HEIGHT / 100.0) * v_isWater;
+    playerPos.y += h;
+    worldPos.y  += h;
+
+    vec4 vpos   = gbufferModelView * vec4(playerPos, 1.0);
+    gl_Position = gl_ProjectionMatrix * vpos;
+
+    v_viewPos  = vpos.xyz;
+    v_worldPos = worldPos;
+    v_texcoord = (gl_TextureMatrix[0] * gl_MultiTexCoord0).xy;
+    v_tint     = gl_Color;
 }

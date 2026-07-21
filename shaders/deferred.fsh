@@ -1,12 +1,10 @@
 #version 330 compatibility
 /*
- * deferred.fsh — primary lighting resolve (docs/02).
- * Turns the Phase 0 gbuffer into a lit HDR image in colortex0:
- *   - sky pixels (far depth) get the analytic sky (lumen_sky)
- *   - surfaces get sky ambient + sun/moon direct (PCF shadowed) + block
- *     light + emission, plus a cheap ground-bounce floor so enclosed
- *     torch-lit rooms are never pure black (docs/02 section 4 — an
- *     intentional approximation, NOT global illumination).
+ * deferred.fsh — primary lighting resolve (docs/02) + scene capture.
+ * Turns the Phase 0 gbuffer into a lit HDR image in colortex0, and
+ * copies that lit opaque+sky result into colortex8 BEFORE translucent
+ * water draws, so the water composite has an un-occluded backdrop to
+ * refract (docs/03 section 3).
  */
 #include "/lib/lumen_common.glsl"
 #include "/lib/lumen_uniforms.glsl"
@@ -15,8 +13,9 @@
 #include "/lib/lumen_shadow.glsl"
 #include "/lib/lumen_light.glsl"
 
-/* RENDERTARGETS: 0 */
-layout(location = 0) out vec4 outColor; // colortex0 (HDR)
+/* RENDERTARGETS: 0,8 */
+layout(location = 0) out vec4 outColor;        // colortex0 (HDR)
+layout(location = 1) out vec4 outSceneCapture; // colortex8 refraction backdrop
 
 in vec2 texcoord;
 
@@ -31,7 +30,6 @@ void main() {
     vec3 color;
 
     if (depth >= 1.0) {
-        // Sky: replace whatever forward geometry left with the analytic sky.
         color = skyRadiance(wDir, wSun, wMoon, wetness);
     } else {
         vec3  albedo   = pow(texture(colortex0, texcoord).rgb, vec3(2.2)); // sRGB -> linear
@@ -43,27 +41,23 @@ void main() {
         float blockLM  = c2.g;
         float emission = texture(colortex3, texcoord).r;
 
-        // Direct sun/moon: colour + direction from the shared sky model.
-        vec3  lightDir = normalize(shadowLightPosition); // view space
+        vec3  lightDir = normalize(shadowLightPosition);
         float NdotL    = max(dot(n, lightDir), 0.0);
         float vis      = sampleShadowPCF(viewPos, NdotL);
         bool  isDay    = wSun.y > 0.0;
         vec3  directCol = isDay ? sunlightColor(wSun.y) : moonlightColor(wMoon.y);
         vec3  direct    = directCol * NdotL * vis * (SUN_INTENSITY / 100.0);
 
-        // Sky ambient re-tinted by the current sky colour (docs/02 section 4).
         vec3  skyAmb   = skyAmbientColor(wSun, wMoon, wetness);
         vec3  ambient  = skyAmb * (skyLM * skyLM);
-
-        // Ground-bounce floor: enclosed dark spaces never go pure black.
         vec3  bounceFloor = vec3(0.055, 0.052, 0.050);
-
-        // Block light: warm, smooth falloff (colour table is a follow-up).
         vec3  block = blockLightColor() * blockLightFalloff(blockLM) * 2.6 * (TORCH_INTENSITY / 100.0);
 
         color  = albedo * ((ambient + bounceFloor) * matAO + direct + block);
-        color += albedo * emission * 4.0; // labPBR emission (0 until decoded)
+        color += albedo * emission * 4.0;
     }
 
-    outColor = vec4(max(color, 0.0), 1.0);
+    vec4 lit = vec4(max(color, 0.0), 1.0);
+    outColor        = lit;
+    outSceneCapture = lit;
 }

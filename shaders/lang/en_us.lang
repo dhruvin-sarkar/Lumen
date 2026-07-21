@@ -34,3 +34,11 @@ option.TORCH_INTENSITY.comment=Strength of local block light (torches, lava, glo
 
 option.EXPOSURE_COMP=Exposure Compensation
 option.EXPOSURE_COMP.comment=Manual brightness offset in hundredths of a stop (EV). 0 = auto-exposure only. Negative darkens, positive brightens.
+
+screen.Water=Water
+
+option.WAVE_HEIGHT=Wave Height / Choppiness
+option.WAVE_HEIGHT.comment=Amplitude of water surface waves, as a percentage of the default. 0 = flat water.
+
+option.REFRACT_STRENGTH=Refraction Strength
+option.REFRACT_STRENGTH.comment=How strongly the wave surface bends the view of the world underneath the water. 0 = no refraction.
