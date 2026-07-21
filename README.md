@@ -69,3 +69,11 @@ water, glint, foam, bloom, and colour pipeline are present at every tier.
 All settings live under domain tabs — Lighting, Water, Color & Exposure,
 Performance — each with an in-game tooltip. A developer "View Buffer"
 debug option can raw-view any pipeline buffer.
+
+## Dimensions
+
+The Overworld gets the full pipeline. The **Nether** and **End** have their
+own lighting: no directional sun, dimension-appropriate ambient and fog
+(the Nether picks up its biome fog colour; the End is a dim purple void
+with faint stars), and god rays disabled. Block light and coloured
+emitters (lava, glowstone, shroomlight) carry those scenes.
