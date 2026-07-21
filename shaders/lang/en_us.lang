@@ -1,0 +1,23 @@
+# Lumen — English (US) option strings.
+# Every user-facing option must have a name + tooltip (docs/06 section 3).
+
+option.QUALITY_TIER=Quality Tier
+option.QUALITY_TIER.comment=Master quality preset. Every tier is a complete, coherent look (docs/05) — not "High with things turned off". Low targets integrated GPUs; Ultra is quality-first.
+value.QUALITY_TIER.0=Low
+value.QUALITY_TIER.1=Medium
+value.QUALITY_TIER.2=High
+value.QUALITY_TIER.3=Ultra
+
+option.DEBUG_BUFFER=Debug: View Buffer
+option.DEBUG_BUFFER.comment=Developer tool. Raw-view a pipeline buffer instead of the final image. 0 = normal render. 1-9 = colortex1..9, 10 = scene depth. Leave at 0 for normal play.
+value.DEBUG_BUFFER.0=Off (normal image)
+value.DEBUG_BUFFER.1=colortex1 normal+AO
+value.DEBUG_BUFFER.2=colortex2 lightmap+spec
+value.DEBUG_BUFFER.3=colortex3 emission+sss
+value.DEBUG_BUFFER.4=colortex4 sky LUT
+value.DEBUG_BUFFER.5=colortex5 water
+value.DEBUG_BUFFER.6=colortex6 volumetrics
+value.DEBUG_BUFFER.7=colortex7 bloom
+value.DEBUG_BUFFER.8=colortex8 history
+value.DEBUG_BUFFER.9=colortex9 exposure
+value.DEBUG_BUFFER.10=depthtex0 scene depth
